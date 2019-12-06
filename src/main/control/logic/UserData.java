@@ -29,7 +29,7 @@ public interface UserData {
 
     /**
      * Method to add a new bill, which should be created from a NewBillEvent.
-     * @param bill the new bill event to turn into a bill.
+     * @param bill the NewBillEvent to turn into a bill.
      */
     public void newBill(NewBillEvent bill);
 

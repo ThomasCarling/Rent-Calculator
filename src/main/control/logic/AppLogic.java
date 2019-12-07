@@ -32,9 +32,9 @@ public class AppLogic {
     }
 
     private void newSession() {
-	gui.billDisplayVisible(true);
+	gui.billDisplayVisible(false);
 	gui.payeeDisplayVisible(true);
-	gui.billInputVisible(false);
+	gui.billInputVisible(true);
 	gui.payeeInputVisible(false);
 	gui.resultFrameVisible(false);
 	data.clear();

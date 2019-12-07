@@ -1,4 +1,4 @@
-package data.checkvalidity;
+package data.format;
 
 /**
  * Class to convert a number to two decimal places.

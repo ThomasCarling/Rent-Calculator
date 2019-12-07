@@ -2,11 +2,14 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import control.listeners.MyListener;
+import control.logic.AppLogic;
 import control.logic.UserInterface;
 
 /**
@@ -14,6 +17,7 @@ import control.logic.UserInterface;
  */
 public class GuiControl implements UserInterface {
 
+    HashMap<Integer, String> errorMessages;
     JFrame mainFrame;
     Menu menu;
     BillForm billForm;
@@ -34,15 +38,22 @@ public class GuiControl implements UserInterface {
 	
 	/* add components to frame*/
 	mainFrame.add(menu);
-	mainFrame.add(billForm);
+	mainFrame.add(billForm, BorderLayout.WEST);
 	mainFrame.add(billList);
+	
+	/* write out error messages*/
+	errorMessages = new HashMap<>();
+	errorMessages.put(AppLogic.COST_ERROR, "Cost must be a valid GBP value.");
+	errorMessages.put(AppLogic.DATE_ERROR, "Date must be between 1st and 31st.");
+	errorMessages.put(AppLogic.NAME_ERROR, "Must have a valid name.");
+	errorMessages.put(AppLogic.OVERWRITE_WARNING, "Are you sure you want to overwrite the old ");
     }
     
     @Override
     public void billDisplayVisible(boolean yes) {
 	billList.setVisible(yes);
     }
-
+    
     @Override
     public void payeeDisplayVisible(boolean yes) {
 	// TODO Auto-generated method stub
@@ -79,7 +90,7 @@ public class GuiControl implements UserInterface {
 
     @Override
     public void addBillDisplayListener(MyListener listener) {
-	billList.addListener(listener);
+	//billList.addListener(listener);
 	
     }
 
@@ -97,7 +108,7 @@ public class GuiControl implements UserInterface {
 
     @Override
     public void addMenuBarListener(MyListener listener) {
-	menu.addListener(listener);
+	//menu.addListener(listener);
 	
     }
 
@@ -109,14 +120,23 @@ public class GuiControl implements UserInterface {
 
     @Override
     public void displayErrorMessage(List<Integer> issues) {
-	// TODO Auto-generated method stub
-	
+	String message = "";
+	for (int myMessage : issues) {
+	    message = message.concat(myMessage + "\n");
+	}
+	JOptionPane.showMessageDialog(mainFrame, message, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void clearBillInput() {
 	// TODO Auto-generated method stub
 	
+    }
+
+    @Override
+    public int displayConfirmationBox(int message, String title) {
+	return JOptionPane.showConfirmDialog(mainFrame, message, title, 
+		JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
     }
 
 }

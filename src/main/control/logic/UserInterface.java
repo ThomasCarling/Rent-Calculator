@@ -91,6 +91,15 @@ public interface UserInterface {
     public void displayErrorMessage(List<Integer> issues);
 
     /**
+     * Method to prompt the gui to get confirmation from the user before
+     * making a change.
+     * @param message the message to display, defined in AppLogic as a
+     * constant.
+     * @param title the title of the dialogue box.
+     */
+    public int displayConfirmationBox(int message, String title);
+    
+    /**
      * Method to clear the contents of the Bill input form.
      */
     public void clearBillInput();

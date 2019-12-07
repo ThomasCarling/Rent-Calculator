@@ -17,7 +17,7 @@ import javax.swing.border.Border;
 
 import control.eventobjects.NewBillEvent;
 import control.listeners.MyListener;
-import data.checkvalidity.DateOfMonth;
+import data.format.DateOfMonth;
 
 public class BillForm extends JPanel{
 

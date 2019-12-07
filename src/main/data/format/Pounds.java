@@ -1,4 +1,4 @@
-package data.checkvalidity;
+package data.format;
 
 /**
  * Class to handle conversions between doubles and String 

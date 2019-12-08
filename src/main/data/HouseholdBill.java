@@ -1,11 +1,15 @@
 package data;
 
+import control.datainterfaces.Bill;
+import data.format.DateOfMonth;
+import data.format.Pounds;
+
 /**
  * A class to store information about a specific bill, such as rent or electricity.
  * @author Thomas
  *
  */
-public class HouseholdBill {
+public class HouseholdBill implements Bill{
     String name;
     double cost;
     int date;
@@ -29,6 +33,10 @@ public class HouseholdBill {
     public double getCost() {
         return cost;
     }
+    
+    public String getStringCost() {
+	return Pounds.toGBP(cost);
+    }
 
     public void setCost(double cost) {
         this.cost = cost;
@@ -36,6 +44,10 @@ public class HouseholdBill {
 
     public int getDate() {
         return date;
+    }
+    
+    public String getStringDate() {
+	return DateOfMonth.toString(date);
     }
 
     public void setDate(int date) {

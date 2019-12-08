@@ -2,6 +2,7 @@ package control.logic;
 
 import java.util.List;
 
+import control.datainterfaces.Bill;
 import control.eventobjects.NewBillEvent;
 
 /** 
@@ -30,7 +31,16 @@ public interface UserData {
     /**
      * Method to add a new bill, which should be created from a NewBillEvent.
      * @param bill the NewBillEvent to turn into a bill.
+     * @return Bill, the new Bill that has been added.
      */
-    public void newBill(NewBillEvent bill);
+    public Bill newBill(NewBillEvent bill);
+
+    /**
+     * Method to ammend an old Bill, which should assertain which Bill it is ammending,
+     * then change the fields of the said bill.
+     * @param bill
+     * @return
+     */
+    public Bill ammendBill(NewBillEvent bill);
 
 }

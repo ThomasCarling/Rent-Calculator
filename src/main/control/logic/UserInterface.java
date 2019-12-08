@@ -2,6 +2,7 @@ package control.logic;
 
 import java.util.List;
 
+import control.datainterfaces.Bill;
 import control.listeners.MyListener;
 
 /***
@@ -93,14 +94,22 @@ public interface UserInterface {
     /**
      * Method to prompt the gui to get confirmation from the user before
      * making a change.
-     * @param message the message to display, defined in AppLogic as a
-     * constant.
+     * @param message the message to display, as a String.
      * @param title the title of the dialogue box.
+     * @return a boolean, true if the user confirms, false if not.
      */
-    public int displayConfirmationBox(int message, String title);
+    public boolean displayConfirmationBox(String message, String title);
     
     /**
      * Method to clear the contents of the Bill input form.
      */
     public void clearBillInput();
+
+    /**
+     * Method to indicate a new Bill which the gui should display in the bill list.
+     * @param newBill the new Bill to display.
+     */
+    public void addBill(Bill newBill);
+
+    public void ammendBill(Bill billAmmend);
 }

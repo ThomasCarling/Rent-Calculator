@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
+import org.w3c.dom.Text;
+
 import control.eventobjects.NewBillEvent;
 import control.listeners.MyListener;
 import data.format.DateOfMonth;
@@ -71,11 +73,7 @@ public class BillForm extends JPanel{
 	});
 
 	////////////////////////* setting sizes *//////////////////////////////////
-	Dimension dim = getPreferredSize();
-	dim.width = 250;
-	setPreferredSize(dim);
-
-	dim = nameField.getPreferredSize();
+	Dimension dim = nameField.getPreferredSize();
 	dim.width = 10;
 	nameField.setMinimumSize(dim);
 	costField.setMinimumSize(dim);
@@ -160,4 +158,10 @@ public class BillForm extends JPanel{
 	this.billListener = listener;
     }
 
+    public void clear() {
+	nameField.setText("");
+	costField.setText("");
+	dateList.setSelectedIndex(0);
+	equalSplitBox.setSelected(false);
+    }
 }

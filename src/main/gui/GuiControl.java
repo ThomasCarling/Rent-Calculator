@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import control.datainterfaces.Bill;
 import control.listeners.MyListener;
 import control.logic.AppLogic;
 import control.logic.UserInterface;
@@ -36,21 +37,28 @@ public class GuiControl implements UserInterface {
 	billForm = new BillForm();
 	billList = new BillList();
 	
-	/* add components to frame*/
+	/* setting sizes */
+	Dimension dim = billForm.getPreferredSize();
+	dim.width = 350;
+	billForm.setPreferredSize(dim);
+	
+	dim = billList.getPreferredSize();
+	dim.width = 350;
+	billList.setPreferredSize(dim);
+	
+	/* add menu to frame*/
 	mainFrame.add(menu);
-	mainFrame.add(billForm, BorderLayout.WEST);
-	mainFrame.add(billList);
 	
 	/* write out error messages*/
 	errorMessages = new HashMap<>();
-	errorMessages.put(AppLogic.COST_ERROR, "Cost must be a valid GBP value.");
+	errorMessages.put(AppLogic.COST_ERROR, "Price must be a valid GBP value.");
 	errorMessages.put(AppLogic.DATE_ERROR, "Date must be between 1st and 31st.");
 	errorMessages.put(AppLogic.NAME_ERROR, "Must have a valid name.");
-	errorMessages.put(AppLogic.OVERWRITE_WARNING, "Are you sure you want to overwrite the old ");
     }
     
     @Override
     public void billDisplayVisible(boolean yes) {
+	if (yes) {mainFrame.add(billList, BorderLayout.WEST);} else {mainFrame.remove(billList);}
 	billList.setVisible(yes);
     }
     
@@ -62,8 +70,8 @@ public class GuiControl implements UserInterface {
 
     @Override
     public void billInputVisible(boolean yes) {
+	if (yes) {mainFrame.add(billForm, BorderLayout.WEST);} else {mainFrame.remove(billForm);}
 	billForm.setVisible(yes);
-	
     }
 
     @Override
@@ -90,7 +98,7 @@ public class GuiControl implements UserInterface {
 
     @Override
     public void addBillDisplayListener(MyListener listener) {
-	//billList.addListener(listener);
+	billList.addListener(listener);
 	
     }
 
@@ -122,21 +130,37 @@ public class GuiControl implements UserInterface {
     public void displayErrorMessage(List<Integer> issues) {
 	String message = "";
 	for (int myMessage : issues) {
-	    message = message.concat(myMessage + "\n");
+	    message = message.concat(errorMessages.get(myMessage) + "\n");
 	}
 	JOptionPane.showMessageDialog(mainFrame, message, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
     @Override
     public void clearBillInput() {
-	// TODO Auto-generated method stub
+	billForm.clear();
+    }
+
+    @Override
+    public boolean displayConfirmationBox(String message, String title) {
+	if (JOptionPane.showConfirmDialog(mainFrame, message, title, 
+		JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
+		== JOptionPane.YES_OPTION) {
+	    return true;
+	} else {
+	    return false;
+	}
+    }
+
+    @Override
+    public void addBill(Bill newBill) {
+	billList.addBill(newBill);
 	
     }
 
     @Override
-    public int displayConfirmationBox(int message, String title) {
-	return JOptionPane.showConfirmDialog(mainFrame, message, title, 
-		JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+    public void ammendBill(Bill billAmmend) {
+	// TODO Auto-generated method stub
+	
     }
 
 }

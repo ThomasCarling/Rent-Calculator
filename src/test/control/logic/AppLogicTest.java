@@ -37,14 +37,6 @@ public class AppLogicTest {
 	assertTrue(mockGui.displayVisible);
 	assertFalse(mockGui.formVisible);
     }
-    
-    @Test
-    public void testBillInputEvent_EnterBillValid() {
-	mockData.errorList = new ArrayList<>();
-	mockData.errorList.add(AppLogic.NO_PROBLEMS);
-	testLogic.billInputEvent(new NewBillEvent(this, "one", "two", "three", false));
-	
-    }
 
     @Test
     public void testBillDisplayEvent() {
@@ -185,6 +177,12 @@ class MockUserInterface implements UserInterface {
     public void clearBillInput() {
 	// TODO Auto-generated method stub
 	
+    }
+
+    @Override
+    public boolean displayConfirmationBox(String message, String title) {
+	// TODO Auto-generated method stub
+	return false;
     }
     
 }

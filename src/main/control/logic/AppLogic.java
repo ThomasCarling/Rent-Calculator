@@ -3,6 +3,7 @@ package control.logic;
 import java.util.EventObject;
 import java.util.List;
 
+import control.datainterfaces.Bill;
 import control.eventobjects.CancelEvent;
 import control.eventobjects.NewBillEvent;
 import control.eventobjects.ShowBillInputEvent;
@@ -22,6 +23,8 @@ public class AppLogic {
     
     private UserData data;
     private UserInterface gui;
+    
+    private Bill preEditState;
     
     public AppLogic(UserData data, UserInterface gui) {
 	this.data = data;
@@ -59,11 +62,23 @@ public class AppLogic {
 	    List<Integer> issues = data.checkIsValid(bill);
 	    
 	    if (issues.contains(NO_PROBLEMS) && issues.size() == 1) {
-		data.newBill(bill);
+		Bill newBill = data.newBill(bill);
 		gui.clearBillInput();
+		gui.addBill(newBill);
 		gui.billDisplayVisible(true);
 		gui.billInputVisible(false);
+	    } else if (issues.contains(OVERWRITE_WARNING) && issues.size() == 1) {
+		boolean result = gui.displayConfirmationBox("Are you sure you want to overwrite "
+			+ "the old " + bill.getName() + " bill?", "Overwrite Warning");
+		if (result == true) {
+		    Bill billAmmend = data.ammendBill(bill);
+		    gui.clearBillInput();
+		    gui.ammendBill(billAmmend);
+		    gui.billDisplayVisible(true);
+		    gui.billInputVisible(false);
+		}
 	    } else {
+		issues.remove((Object)OVERWRITE_WARNING);
 		gui.displayErrorMessage(issues);
 	    }
 	}

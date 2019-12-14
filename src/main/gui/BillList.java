@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import control.datainterfaces.Bill;
-import control.eventobjects.ShowBillInputEvent;
+import control.eventobjects.InputFormEvent;
 import control.listeners.MyListener;
 
 public class BillList extends JPanel{
@@ -63,7 +63,7 @@ public class BillList extends JPanel{
 	});
 	
 	newBillButton.addActionListener(e -> {
-	    listener.eventOccurred(new ShowBillInputEvent(newBillButton));
+	    listener.eventOccurred(new InputFormEvent(newBillButton));
 	});
 
 	/* and add each component */

@@ -4,8 +4,12 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.util.stream.IntStream;
 
 import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -14,8 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
-
-import org.w3c.dom.Text;
 
 import control.eventobjects.NewBillEvent;
 import control.listeners.MyListener;
@@ -40,24 +42,22 @@ public class BillForm extends JPanel{
      * Creates a new instance of a BillForm.
      */
     public BillForm() {
-
+	
+	/* setup datelist*/
+	String[] dates = IntStream.rangeClosed(1, 31).boxed().map(DateOfMonth::toString).toArray(String[]::new);
+	ComboBoxModel<String> comboModel = new DefaultComboBoxModel<>(dates);
+	
 	///////////////* initialising all of the fields *////////////////
 	nameLabel = new JLabel("Bill type :");
 	nameField = new JTextField();
 	costLabel = new JLabel("Total cost :");
 	costField = new JTextField();
 	dateLabel = new JLabel("Date to pay :");
-	dateList = new JComboBox<>();
+	dateList = new JComboBox<>(comboModel);
+	dateList.setSelectedIndex(0);
 	equalSplitLabel = new JLabel("Split equally? : ");
 	equalSplitBox = new JCheckBox();
 	enterButton = new JButton("Enter");
-
-	////////////////////* setup for dateList *////////////////////////
-	for (int i = 1; i <= 31; i++) {
-	    String toAdd = DateOfMonth.toString(i);
-	    dateList.addItem(toAdd);
-	}
-	dateList.setSelectedIndex(0);
 
 	//////* adding an ActionListener to the enterButton *//////////////
 	enterButton.addActionListener( al -> {

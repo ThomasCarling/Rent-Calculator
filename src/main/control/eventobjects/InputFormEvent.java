@@ -7,11 +7,11 @@ import java.util.EventObject;
  * @author Thomas
  *
  */
-public class ShowBillInputEvent extends EventObject {
+public class InputFormEvent extends EventObject {
 
     private static final long serialVersionUID = -8897935940282598814L;
 
-    public ShowBillInputEvent(Object source) {
+    public InputFormEvent(Object source) {
 	super(source);
     }
 

@@ -3,10 +3,12 @@ package control.logic;
 import java.util.EventObject;
 import java.util.List;
 
+import control.constants.MyError;
 import control.datainterfaces.Bill;
 import control.eventobjects.CancelEvent;
+import control.eventobjects.EditEvent;
 import control.eventobjects.NewBillEvent;
-import control.eventobjects.ShowBillInputEvent;
+import control.eventobjects.InputFormEvent;
 
 /**
  * Class to control all of the interactions between my gui and the data it handles.
@@ -24,7 +26,7 @@ public class AppLogic {
     private UserData data;
     private UserInterface gui;
     
-    private Bill preEditState;
+    private Bill preEditBill;
     
     public AppLogic(UserData data, UserInterface gui) {
 	this.data = data;
@@ -59,37 +61,43 @@ public class AppLogic {
 	    
 	} else if (event instanceof NewBillEvent) {
 	    NewBillEvent bill = (NewBillEvent) event;
-	    List<Integer> issues = data.checkIsValid(bill);
+	    List<MyError> issues = data.checkIsValid(bill);
 	    
-	    if (issues.contains(NO_PROBLEMS) && issues.size() == 1) {
+	    if (issues.contains(MyError.NA) && issues.size() == 1) {
 		Bill newBill = data.newBill(bill);
+		
 		gui.clearBillInput();
 		gui.addBill(newBill);
 		gui.billDisplayVisible(true);
 		gui.billInputVisible(false);
-	    } else if (issues.contains(OVERWRITE_WARNING) && issues.size() == 1) {
-		boolean result = gui.displayConfirmationBox("Are you sure you want to overwrite "
-			+ "the old " + bill.getName() + " bill?", "Overwrite Warning");
+		
+	    } else if (issues.contains(MyError.OVERWRITE) && issues.size() == 1) {
+		boolean result = gui.displayConfirmationBox(MyError.OVERWRITE.message, "Overwrite Warning");
 		if (result == true) {
 		    Bill billAmmend = data.ammendBill(bill);
+		    
 		    gui.clearBillInput();
 		    gui.ammendBill(billAmmend);
 		    gui.billDisplayVisible(true);
 		    gui.billInputVisible(false);
 		}
 	    } else {
-		issues.remove((Object)OVERWRITE_WARNING);
+		issues.remove(MyError.OVERWRITE);
 		gui.displayErrorMessage(issues);
 	    }
 	}
     }
     
     protected void billDisplayEvent(EventObject event) {
-   	if (event instanceof ShowBillInputEvent) {
+   	if (event instanceof InputFormEvent) {
    	    gui.billInputVisible(true);
    	    gui.billDisplayVisible(false);
+   	} else if (event instanceof EditEvent) {
+   	    preEditBill = ((EditEvent) event).getBill();
+   	    //gui.removeBill(preEditBill);
+   	    //gui.displayInBillInput(preEditBill);
+   	    
    	}
-   	
     }
     
     protected void payeeInputEvent(EventObject event) {

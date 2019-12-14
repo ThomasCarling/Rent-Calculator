@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import control.constants.MyError;
 import control.datainterfaces.Bill;
 import control.listeners.MyListener;
 import control.logic.AppLogic;
@@ -127,10 +128,10 @@ public class GuiControl implements UserInterface {
     }
 
     @Override
-    public void displayErrorMessage(List<Integer> issues) {
+    public void displayErrorMessage(List<MyError> issues) {
 	String message = "";
-	for (int myMessage : issues) {
-	    message = message.concat(errorMessages.get(myMessage) + "\n");
+	for (MyError error : issues) {
+	    message = message.concat(error.message + "\n");
 	}
 	JOptionPane.showMessageDialog(mainFrame, message, "ERROR", JOptionPane.ERROR_MESSAGE);
     }

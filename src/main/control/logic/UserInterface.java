@@ -2,6 +2,7 @@ package control.logic;
 
 import java.util.List;
 
+import control.constants.MyError;
 import control.datainterfaces.Bill;
 import control.listeners.MyListener;
 
@@ -86,10 +87,9 @@ public interface UserInterface {
 
     /**
      * Method to prompt the gui to display an error message.
-     * @param issues a list of each type of error, defined in AppLogic
-     * as constants.
+     * @param a list of each type of error, defined as a MyError.
      */
-    public void displayErrorMessage(List<Integer> issues);
+    public void displayErrorMessage(List<MyError> issues);
 
     /**
      * Method to prompt the gui to get confirmation from the user before

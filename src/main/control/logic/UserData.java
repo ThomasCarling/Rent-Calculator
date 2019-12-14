@@ -2,6 +2,7 @@ package control.logic;
 
 import java.util.List;
 
+import control.constants.MyError;
 import control.datainterfaces.Bill;
 import control.eventobjects.NewBillEvent;
 
@@ -22,11 +23,11 @@ public interface UserData {
 
     /**
      * Method to check a new bill, and validate each field, returning 
-     * error messages if any input is invalid.
+     * errors if anything is invalid.
      * @param event the NewBillEvent to check.
-     * @return a list of messages, defined as constants in AppLogic.
+     * @return a list of MyError's.
      */
-    public List<Integer> checkIsValid(NewBillEvent event);
+    public List<MyError> checkIsValid(NewBillEvent event);
 
     /**
      * Method to add a new bill, which should be created from a NewBillEvent.

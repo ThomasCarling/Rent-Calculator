@@ -1,13 +1,26 @@
 package control.datainterfaces;
 
+/**
+ * Interface to define the behaviour of a bill.
+ * @author Thomas
+ *
+ */
 public interface Bill {
 
-    boolean isEquallySplit();
+    public boolean isEquallySplit();
+    
+    public String getName();
+    
+    public int getDate();
 
-    String getName();
+    public String getStringDate();
 
-    String getStringDate();
+    public String getStringCost();
 
-    String getStringCost();
+    @Override
+    int hashCode();
 
+    @Override
+    boolean equals(Object obj);
+    
 }

@@ -2,16 +2,15 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import control.constants.InputType;
 import control.constants.MyError;
 import control.datainterfaces.Bill;
 import control.listeners.MyListener;
-import control.logic.AppLogic;
 import control.logic.UserInterface;
 
 /**
@@ -19,7 +18,6 @@ import control.logic.UserInterface;
  */
 public class GuiControl implements UserInterface {
 
-    HashMap<Integer, String> errorMessages;
     JFrame mainFrame;
     Menu menu;
     BillForm billForm;
@@ -49,17 +47,15 @@ public class GuiControl implements UserInterface {
 	
 	/* add menu to frame*/
 	mainFrame.add(menu);
-	
-	/* write out error messages*/
-	errorMessages = new HashMap<>();
-	errorMessages.put(AppLogic.COST_ERROR, "Price must be a valid GBP value.");
-	errorMessages.put(AppLogic.DATE_ERROR, "Date must be between 1st and 31st.");
-	errorMessages.put(AppLogic.NAME_ERROR, "Must have a valid name.");
     }
     
     @Override
     public void billDisplayVisible(boolean yes) {
-	if (yes) {mainFrame.add(billList, BorderLayout.WEST);} else {mainFrame.remove(billList);}
+	if (yes) {
+	    mainFrame.add(billList, BorderLayout.WEST);
+	    } else {
+		mainFrame.remove(billList);
+	    }
 	billList.setVisible(yes);
     }
     
@@ -70,8 +66,13 @@ public class GuiControl implements UserInterface {
     }
 
     @Override
-    public void billInputVisible(boolean yes) {
-	if (yes) {mainFrame.add(billForm, BorderLayout.WEST);} else {mainFrame.remove(billForm);}
+    public void billInputVisible(boolean yes, InputType type) {
+	if (yes) {
+	    billForm.setInputType(type);
+	    mainFrame.add(billForm, BorderLayout.WEST);
+	    } else {
+		mainFrame.remove(billForm);
+	    }
 	billForm.setVisible(yes);
     }
 
@@ -159,8 +160,18 @@ public class GuiControl implements UserInterface {
     }
 
     @Override
-    public void ammendBill(Bill billAmmend) {
-	// TODO Auto-generated method stub
+    public void amendBill(Bill billAmend, Bill preAmendBill) {
+	billList.amendBill(billAmend, preAmendBill);
+    }
+
+    @Override
+    public InputType getBillInputType() {
+	return billForm.getInputType();
+    }
+
+    @Override
+    public void displayForBillInput(Bill toDisplay) {
+	billForm.setText(toDisplay);
 	
     }
 

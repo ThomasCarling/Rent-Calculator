@@ -35,12 +35,13 @@ public class DataControl implements UserData{
 	if (!DateOfMonth.isValid(event.getDate())) {
 	    result.add(MyError.DATE);
 	};
+	String nameToCheck;
 	try {
-	    NameCapitalisation.correct(event.getName()); 
+	    nameToCheck = NameCapitalisation.correct(event.getName()); 
 	} catch (Exception e) {
 	    result.add(MyError.NAME); 
+	    nameToCheck = "";
 	};
-	String nameToCheck = NameCapitalisation.correct(event.getName());
 	for (Bill myBill : bills) { 
 	    if (myBill.getName().equals(nameToCheck)) {
 		result.add(MyError.OVERWRITE);
@@ -53,21 +54,32 @@ public class DataControl implements UserData{
     }
 
     @Override
-    public Bill newBill(NewBillEvent bill) {
+    public Bill createBill(NewBillEvent bill) {
 	String name = NameCapitalisation.correct(bill.getName());
 	double cost = Pounds.toDouble(bill.getCost());
 	int date = DateOfMonth.toInt(bill.getDate());
 	boolean split = bill.isEquallySplit();
 	Bill toReturn = new HouseholdBill(name, cost, date, split);
-	
-	bills.add(toReturn);
 	return toReturn;
     }
 
     @Override
-    public Bill ammendBill(NewBillEvent bill) {
-	// TODO Auto-generated method stub
+    public void amendBill(Bill changedBill, Bill oldBill) {
+	bills.remove(oldBill);
+	bills.add(changedBill);
+    }
+
+    @Override
+    public Bill getBill(String name) {
+	for (Bill myBill : bills) {
+	    if (myBill.getName().equals(name)) {return myBill; }
+	}
 	return null;
+    }
+
+    @Override
+    public void addBill(Bill toAdd) {
+	bills.add(toAdd);
     }
 
 }

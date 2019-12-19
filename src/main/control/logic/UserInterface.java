@@ -2,6 +2,7 @@ package control.logic;
 
 import java.util.List;
 
+import control.constants.InputType;
 import control.constants.MyError;
 import control.datainterfaces.Bill;
 import control.listeners.MyListener;
@@ -28,8 +29,9 @@ public interface UserInterface {
     /**
      * Method to set whether a Bill input form is visible.
      * @param yes true if it is, false if it isn't.
+     * @param editOrNew what to display at the top of the form.
      */
-    public void billInputVisible(boolean yes);
+    public void billInputVisible(boolean yes, InputType editOrNew);
 
     /**
      * Method to set whether a Payee input form is visible.
@@ -111,5 +113,21 @@ public interface UserInterface {
      */
     public void addBill(Bill newBill);
 
-    public void ammendBill(Bill billAmmend);
+    /**
+     * Method to amend an existing bill the gui is displaying.
+     * @param billAmend the bill to amend.
+     */
+    public void amendBill(Bill billAmend, Bill preAmendBill);
+
+    /**
+     * Method to get the type of input the BillForm is for, e.g a new bill, an edit, etc.
+     * @return the InputType.
+     */
+    public InputType getBillInputType();
+    
+    /**
+     * Method to set what the bill input form should display.
+     * @param toDisplay the bill to display.
+     */
+    public void displayForBillInput(Bill toDisplay);
 }

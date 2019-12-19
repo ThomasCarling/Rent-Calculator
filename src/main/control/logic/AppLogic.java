@@ -3,6 +3,7 @@ package control.logic;
 import java.util.EventObject;
 import java.util.List;
 
+import control.constants.InputType;
 import control.constants.MyError;
 import control.datainterfaces.Bill;
 import control.eventobjects.CancelEvent;
@@ -16,17 +17,11 @@ import control.eventobjects.InputFormEvent;
  *
  */
 public class AppLogic {
-    public static final int NAME_ERROR = 0;
-    public static final int COST_ERROR = 1;
-    public static final int DATE_ERROR = 2;
-    public static final int EQUAL_SPLIT_ERROR = 3;
-    public static final int OVERWRITE_WARNING = 4;
-    public static final int NO_PROBLEMS = 5;
     
     private UserData data;
     private UserInterface gui;
     
-    private Bill preEditBill;
+    Bill preEditBill;
     
     public AppLogic(UserData data, UserInterface gui) {
 	this.data = data;
@@ -39,7 +34,7 @@ public class AppLogic {
     private void newSession() {
 	gui.billDisplayVisible(false);
 	gui.payeeDisplayVisible(true);
-	gui.billInputVisible(true);
+	gui.billInputVisible(true, InputType.NEW);
 	gui.payeeInputVisible(false);
 	gui.resultFrameVisible(false);
 	data.clear();
@@ -57,32 +52,44 @@ public class AppLogic {
     protected void billInputEvent(EventObject event) {
 	if (event instanceof CancelEvent) {
 	    gui.billDisplayVisible(true);
-	    gui.billInputVisible(false);
+	    gui.billInputVisible(false, InputType.NA);
 	    
 	} else if (event instanceof NewBillEvent) {
+	    InputType type = gui.getBillInputType();
 	    NewBillEvent bill = (NewBillEvent) event;
 	    List<MyError> issues = data.checkIsValid(bill);
 	    
 	    if (issues.contains(MyError.NA) && issues.size() == 1) {
-		Bill newBill = data.newBill(bill);
+		if (gui.getBillInputType() == InputType.NEW) {
+		    Bill newBill = data.createBill(bill);
+		    data.addBill(newBill);
+		    gui.addBill(newBill);
+		    gui.clearBillInput();
+		    gui.billDisplayVisible(true);
+		    gui.billInputVisible(false, InputType.NA);
+		} else if (gui.getBillInputType() == InputType.EDIT) {
+		    issues.clear();
+		    issues.add(MyError.OVERWRITE);
+		}
 		
-		gui.clearBillInput();
-		gui.addBill(newBill);
-		gui.billDisplayVisible(true);
-		gui.billInputVisible(false);
-		
-	    } else if (issues.contains(MyError.OVERWRITE) && issues.size() == 1) {
+	    } 
+	    if (issues.contains(MyError.OVERWRITE) && issues.size() == 1) {
 		boolean result = gui.displayConfirmationBox(MyError.OVERWRITE.message, "Overwrite Warning");
 		if (result == true) {
-		    Bill billAmmend = data.ammendBill(bill);
-		    
+		    Bill newBill = data.createBill(bill);
+		    if (preEditBill == null) {
+			preEditBill = data.getBill(newBill.getName());
+		    }
+		    data.amendBill(newBill, preEditBill);
+		    gui.amendBill(newBill, preEditBill);
 		    gui.clearBillInput();
-		    gui.ammendBill(billAmmend);
 		    gui.billDisplayVisible(true);
-		    gui.billInputVisible(false);
+		    gui.billInputVisible(false, InputType.NA);
 		}
-	    } else {
-		issues.remove(MyError.OVERWRITE);
+	    } 
+	    issues.remove(MyError.OVERWRITE);
+	    issues.remove(MyError.NA);
+	    if (issues.size() > 0){
 		gui.displayErrorMessage(issues);
 	    }
 	}
@@ -90,13 +97,13 @@ public class AppLogic {
     
     protected void billDisplayEvent(EventObject event) {
    	if (event instanceof InputFormEvent) {
-   	    gui.billInputVisible(true);
+   	    gui.billInputVisible(true, InputType.NEW);
    	    gui.billDisplayVisible(false);
    	} else if (event instanceof EditEvent) {
    	    preEditBill = ((EditEvent) event).getBill();
-   	    //gui.removeBill(preEditBill);
-   	    //gui.displayInBillInput(preEditBill);
-   	    
+   	    gui.displayForBillInput(preEditBill);
+   	    gui.billInputVisible(true, InputType.EDIT);
+   	    gui.billDisplayVisible(false);
    	}
     }
     

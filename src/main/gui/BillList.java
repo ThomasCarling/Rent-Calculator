@@ -10,17 +10,20 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import control.datainterfaces.Bill;
+import control.eventobjects.EditEvent;
 import control.eventobjects.InputFormEvent;
 import control.listeners.MyListener;
 
 public class BillList extends JPanel{
     private MyListener listener;
     private JTextArea text;
+    private JPanel buttonPanel;
     private JButton newBillButton;
+    private JButton editButton;
+    private JButton deleteButton;
     private DefaultListModel<String> nameListModel;
     private JList<String> nameList;
     private HashMap<String, Bill> bills;
@@ -30,14 +33,16 @@ public class BillList extends JPanel{
 
     public BillList() {
 	super();
-	setLayout(new BorderLayout());
 
 	/* initialise variables */
 	text = new JTextArea();
-	newBillButton = new JButton("Add new bill");
 	nameListModel = new DefaultListModel<>();
 	nameList = new JList<>(nameListModel);
 	bills = new HashMap<>();
+	buttonPanel = new JPanel();
+	editButton = new JButton("Edit");
+	deleteButton = new JButton("Delete");
+	newBillButton = new JButton("Add new bill");
 
 	/* figure each components settings */
 	text.setEditable(false);
@@ -54,23 +59,37 @@ public class BillList extends JPanel{
 
 	/*sort listeners */
 	nameList.addListSelectionListener(e -> {
-	    String name = nameList.getSelectedValue();
-	    Bill myBill = bills.get(name);
-	    String equal = myBill.isEquallySplit() ? "equally" : "unequally";
-	    text.setText(myBill.getName() + " Bill,\n total cost "+ myBill.getStringCost() 
-	    + ",\n due on the " + myBill.getStringDate() + " of each month,\n split " + 
-	    equal + " between tenants.");
+	    if (nameList.getSelectedIndex() == -1) {
+		text.setText("");
+	    } else {
+		String name = nameList.getSelectedValue();
+		Bill myBill = bills.get(name);
+		String equal = myBill.isEquallySplit() ? "equally" : "unequally";
+		text.setText(myBill.getName() + " Bill,\n total cost "+ myBill.getStringCost() 
+		+ ",\n due on the " + myBill.getStringDate() + " of each month,\n split " + 
+		equal + " between tenants.");
+	    }
 	});
-	
+
 	newBillButton.addActionListener(e -> {
 	    listener.eventOccurred(new InputFormEvent(newBillButton));
 	});
 
+	editButton.addActionListener(e -> {
+	    String name = nameList.getSelectedValue();
+	    Bill myBill = bills.get(name);
+	    listener.eventOccurred(new EditEvent(editButton, myBill));
+	});
+
 	/* and add each component */
+	setLayout(new BorderLayout());
+	buttonPanel.setLayout(new BorderLayout());
 	add(new JScrollPane(text), BorderLayout.EAST);
 	add(nameList, BorderLayout.WEST);
-	add(newBillButton, BorderLayout.SOUTH);
-	
+	buttonPanel.add(editButton, BorderLayout.WEST);
+	buttonPanel.add(deleteButton, BorderLayout.EAST);
+	buttonPanel.add(newBillButton, BorderLayout.SOUTH);
+	add(buttonPanel, BorderLayout.SOUTH);
 
     }
 
@@ -83,6 +102,14 @@ public class BillList extends JPanel{
     public void addBill(Bill newBill) {
 	nameListModel.addElement(newBill.getName());
 	bills.put(newBill.getName(), newBill);
+    }
+
+
+    public void amendBill(Bill billAmmend, Bill oldBill) {
+	nameListModel.removeElement(oldBill.getName());
+	nameListModel.addElement(billAmmend.getName());
+	bills.remove(oldBill.getName());
+	bills.put(billAmmend.getName(), billAmmend);
     }
 
 }

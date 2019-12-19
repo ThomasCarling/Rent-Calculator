@@ -18,7 +18,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
+import control.constants.InputType;
+import control.datainterfaces.Bill;
+import control.eventobjects.CancelEvent;
 import control.eventobjects.NewBillEvent;
 import control.listeners.MyListener;
 import data.format.DateOfMonth;
@@ -37,6 +41,8 @@ public class BillForm extends JPanel{
     private JLabel equalSplitLabel;
     private JCheckBox equalSplitBox;
     private JButton enterButton;
+    private JButton cancelButton;
+    private InputType inputType;
 
     /**
      * Creates a new instance of a BillForm.
@@ -58,6 +64,7 @@ public class BillForm extends JPanel{
 	equalSplitLabel = new JLabel("Split equally? : ");
 	equalSplitBox = new JCheckBox();
 	enterButton = new JButton("Enter");
+	cancelButton = new JButton("Cancel");
 
 	//////* adding an ActionListener to the enterButton *//////////////
 	enterButton.addActionListener( al -> {
@@ -71,6 +78,11 @@ public class BillForm extends JPanel{
 		billListener.eventOccurred(event);
 	    }
 	});
+	
+	/* and to the cancel button*/
+	cancelButton.addActionListener(al -> {
+	    billListener.eventOccurred(new CancelEvent(this));
+	});
 
 	////////////////////////* setting sizes *//////////////////////////////////
 	Dimension dim = nameField.getPreferredSize();
@@ -81,9 +93,7 @@ public class BillForm extends JPanel{
 
 
 	//////////////////* Sorting out the border *///////////////////////////////
-	Border innerBorder = BorderFactory.createTitledBorder("New Bill");
-	Border outerBorder = BorderFactory.createBevelBorder(BevelBorder.LOWERED);
-	setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
+	
 
 	///////////////////* Prepping GridBagLayout *//////////////////////////////
 	setLayout(new GridBagLayout());
@@ -147,11 +157,25 @@ public class BillForm extends JPanel{
 	///////////////////////////* Next row *////////////////////////////////////
 	gc.weighty = 10;
 	gc.gridy++;
+	
+	gc.gridx = 0;
+	gc.anchor = GridBagConstraints.FIRST_LINE_END;
+	gc.fill = GridBagConstraints.NONE;
+	add(cancelButton, gc);
 
 	gc.gridx = 1;
 	gc.anchor = GridBagConstraints.FIRST_LINE_START;
 	gc.fill = GridBagConstraints.NONE;
 	add(enterButton, gc);
+	
+	/*Border */
+	addBorder(InputType.NEW);
+    }
+    
+    private void addBorder(InputType type) {
+	Border innerBorder = BorderFactory.createTitledBorder(type.message + " Bill");
+	Border outerBorder = BorderFactory.createBevelBorder(BevelBorder.LOWERED);
+	setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
     }
 
     public void addListener(MyListener listener) {
@@ -163,5 +187,21 @@ public class BillForm extends JPanel{
 	costField.setText("");
 	dateList.setSelectedIndex(0);
 	equalSplitBox.setSelected(false);
+    }
+    
+    public void setText(Bill toChange) {
+	nameField.setText(toChange.getName());
+	costField.setText(toChange.getStringCost());
+	dateList.setSelectedIndex(toChange.getDate() - 1);
+	equalSplitBox.setSelected(toChange.isEquallySplit());
+    }
+    
+    public void setInputType(InputType change) {
+	inputType = change;
+	addBorder(change);
+    }
+
+    public InputType getInputType() {
+	return inputType;
     }
 }

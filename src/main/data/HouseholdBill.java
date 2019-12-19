@@ -10,10 +10,10 @@ import data.format.Pounds;
  *
  */
 public class HouseholdBill implements Bill{
-    String name;
-    double cost;
-    int date;
-    boolean equallySplit;
+    private String name;
+    private double cost;
+    private int date;
+    private boolean equallySplit;
 
     public HouseholdBill(String name, double cost, int date, boolean split) {
 	this.name = name;
@@ -74,15 +74,16 @@ public class HouseholdBill implements Bill{
     public boolean equals(Object obj) {
 	if (this == obj)
 	    return true;
-	if (!(obj instanceof HouseholdBill))
+	if (!(obj instanceof Bill))
 	    return false;
-	HouseholdBill other = (HouseholdBill) obj;
+	Bill other = (Bill) obj;
 	if (name == null) {
-	    if (other.name != null)
+	    if (other.getName() != null)
 		return false;
-	} else if (!name.equals(other.name))
+	} else if (!name.equals(other.getName()))
 	    return false;
 	return true;
     }
+
 
 }

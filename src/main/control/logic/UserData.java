@@ -30,18 +30,29 @@ public interface UserData {
     public List<MyError> checkIsValid(NewBillEvent event);
 
     /**
-     * Method to add a new bill, which should be created from a NewBillEvent.
+     * Method to create a new bill, which should be created from a NewBillEvent.
      * @param bill the NewBillEvent to turn into a bill.
-     * @return Bill, the new Bill that has been added.
+     * @return Bill, the new Bill from the Event.
      */
-    public Bill newBill(NewBillEvent bill);
+    public Bill createBill(NewBillEvent bill);
 
     /**
-     * Method to ammend an old Bill, which should assertain which Bill it is ammending,
-     * then change the fields of the said bill.
-     * @param bill
-     * @return
+     * Method to add a new Bill to the list of stored bills.
+     * @param toAdd the bill to add.
      */
-    public Bill ammendBill(NewBillEvent bill);
+    public void addBill(Bill toAdd);
+    /**
+     * Method to edit an existing bill.
+     * @param changedBill the new version to add.
+     * @param oldBill the old version to remove.
+     */
+    public void amendBill(Bill changedBill, Bill oldBill);
+    
+    /**
+     * Method to return an existing bill.
+     * @param name the name of the bill to return.
+     * @return the specified bill.
+     */
+    public Bill getBill(String name);
 
 }
